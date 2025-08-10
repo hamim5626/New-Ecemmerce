@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
+import DynamicFavicon from "@/components/reusable/DynamicFavicon";
 
 // Load fonts
 const inter = Inter({ subsets: ["latin"] });
@@ -18,6 +19,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <DynamicFavicon />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <Navbar />

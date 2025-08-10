@@ -26,6 +26,7 @@ import ModalManager from "./reusable/ModalManager";
 import { useAuth } from "@/context/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cartUtils } from "@/lib/utils";
+import useFetch from "@/hooks/use-fetch";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -53,6 +54,7 @@ export default function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { data: logoData, loading: logoLoading } = useFetch("/get-logo");
 
   useEffect(() => {
     const loadCartCount = () => {
@@ -123,7 +125,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold hover:opacity-80 transition-all relative z-[60]"
+            className="hover:opacity-80 transition-all relative z-[60]"
             style={{
               color: isMobileMenuOpen ? "white" : PRIMARY_COLOR,
               textShadow: isMobileMenuOpen
@@ -131,7 +133,19 @@ export default function Navbar() {
                 : "none",
             }}
           >
-            Lorem
+            {logoLoading ? (
+              <div className="w-24 h-8 sm:w-32 sm:h-10 md:w-40 md:h-12 lg:w-48 lg:h-14 bg-gray-300 animate-pulse rounded"></div>
+            ) : logoData?.data?.logo ? (
+              <img 
+                src={logoData.data.logo} 
+                alt="Allurdevine Logo" 
+                className="h-8 w-auto sm:h-10 md:h-12 lg:h-14 object-contain"
+              />
+            ) : (
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+                Allurdevine
+              </span>
+            )}
           </Link>
 
           {/* Desktop Navigation */}
