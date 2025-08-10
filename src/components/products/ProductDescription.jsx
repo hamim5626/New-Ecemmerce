@@ -3,7 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Star, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
@@ -19,7 +19,6 @@ const ProductDescription = ({
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [reviewForm, setReviewForm] = useState({
     review_content: "",
     rating_point: 5,
@@ -153,24 +152,10 @@ const ProductDescription = ({
 
   const openAllReviews = () => {
     setShowAllReviews(true);
-    setCurrentReviewIndex(0);
   };
 
   const closeAllReviews = () => {
     setShowAllReviews(false);
-    setCurrentReviewIndex(0);
-  };
-
-  const nextReview = () => {
-    setCurrentReviewIndex((prev) =>
-      prev === reviews.length - 1 ? 0 : prev + 1
-    );
-  };
-
-  const prevReview = () => {
-    setCurrentReviewIndex((prev) =>
-      prev === 0 ? reviews.length - 1 : prev - 1
-    );
   };
 
   const getAverageRating = () => {
@@ -406,27 +391,27 @@ const ProductDescription = ({
         </TabsContent>
       </Tabs>
 
-      {/* All Reviews Modal */}
-      {showAllReviews && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div>
-                <h2 className="text-2xl font-bold text-heading">All Customer Reviews</h2>
-                <p className="text-gray-600 mt-1">
-                  {reviews.length} reviews • Average rating: {getAverageRating()}/5
-                </p>
-              </div>
-              <Button
-                onClick={closeAllReviews}
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-gray-100"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+                {/* All Reviews Modal */}
+          {showAllReviews && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
+              <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                  <div>
+                    <h2 className="text-2xl font-bold text-heading">All Customer Reviews</h2>
+                    <p className="text-gray-600 mt-1">
+                      {reviews.length} reviews • Average rating: {getAverageRating()}/5
+                    </p>
+                  </div>
+                  <Button
+                    onClick={closeAllReviews}
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-gray-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
 
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
@@ -435,10 +420,7 @@ const ProductDescription = ({
                   {reviews.map((review, index) => (
                     <div
                       key={review.id}
-                      className={`p-6 border rounded-lg transition-all duration-300 ${index === currentReviewIndex
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200'
-                        }`}
+                      className="p-6 border border-gray-200 rounded-lg"
                     >
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0">
@@ -490,35 +472,6 @@ const ProductDescription = ({
                 </div>
               )}
             </div>
-
-            {/* Modal Footer with Navigation */}
-            {reviews.length > 1 && (
-              <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">
-                    Review {currentReviewIndex + 1} of {reviews.length}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={prevReview}
-                    variant="outline"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    onClick={nextReview}
-                    variant="outline"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
