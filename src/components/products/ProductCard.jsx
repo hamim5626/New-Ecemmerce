@@ -18,7 +18,7 @@ const ProductCard = ({ product, isWishlist, onWishlistChange }) => {
     }
 
     setIsLoading(true);
-    
+
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/wishlist/create`,
@@ -31,9 +31,9 @@ const ProductCard = ({ product, isWishlist, onWishlistChange }) => {
           },
         }
       );
-      
+
       console.log("Wishlist updated:", response.data);
-      
+
       // Call the callback to update parent component state
       if (onWishlistChange) {
         onWishlistChange(product.id, true);
@@ -42,10 +42,10 @@ const ProductCard = ({ product, isWishlist, onWishlistChange }) => {
       // Optional: Show success message
       // You could use a toast notification here instead
       console.log("Product added to wishlist successfully!");
-      
+
     } catch (error) {
       console.error("Error adding to wishlist:", error);
-      
+
       if (error.response?.code === 401) {
         alert("Please login again to continue");
       } else {
@@ -56,67 +56,67 @@ const ProductCard = ({ product, isWishlist, onWishlistChange }) => {
     }
   };
   return (
-    <div
-      key={product.id}
-      
-      className="group relative block overflow-hidden"
-    >
-      <div className="relative border px-[57px] md:h-[450px] py-[52px]">
-        {product.product_image ? (
-          <Image
-            src={product.product_image}
-            alt="product image"
-            className="max-h-max object-contain mx-auto w-full"
-            width={1000}
-            height={1000}
-            quality={100}
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-gray-400 text-center">
-              <div className="w-16 h-16 mx-auto mb-2 border-2 border-gray-300 border-dashed rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📷</span>
+    <Link href={`/products/${product.id}`}>
+      <div
+        key={product.id}
+
+        className="group relative block overflow-hidden"
+      >
+        <div className="relative border px-[57px] md:h-[450px] py-[52px]">
+          {product.product_image ? (
+            <Image
+              src={product.product_image}
+              alt="product image"
+              className="max-h-max object-contain mx-auto w-full"
+              width={1000}
+              height={1000}
+              quality={100}
+              loading="lazy"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-gray-400 text-center">
+                <div className="w-16 h-16 mx-auto mb-2 border-2 border-gray-300 border-dashed rounded-lg flex items-center justify-center">
+                  <span className="text-2xl">📷</span>
+                </div>
+                <p className="text-sm">No image available</p>
               </div>
-              <p className="text-sm">No image available</p>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Heart Icon */}
-        {isWishlist ? (
-          <div className="absolute top-4 right-4 p-2 rounded-full bg-[#F5F5F5] shadow-md border border-primary opacity-100 transition-opacity duration-300 z-10">
-            <Heart className="h-5 w-5 text-red-500 fill-red-500 z-10" />
-          </div>
-        ) : (
-          <div 
-            onClick={!isLoading ? handleWishlist : undefined} 
-            className={`absolute top-4 right-4 p-2 rounded-full bg-white shadow-md border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 ${
-              isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-            }`}
-          >
-            <Heart className={`h-5 w-5 text-primary z-10 ${
-              isLoading ? 'animate-pulse' : ''
-            }`} />
-          </div>
-        )}
-      </div>
-
-      <Link href={`/products/${product.id}`} className="relative bg-white pt-3">
-        <h3 className="text-[21.342px] font-lato leading-[32.01px] text-heading group-hover:underline group-hover:underline-offset-4">
-          {product.product_name}
-        </h3>
-
-        <div className="flex items-center gap-x-[5.34px]">
-          <p className="text-[21.342px] font-lato leading-[32.01px] text-heading">
-            ${product.discount_price}
-          </p>
-          <p className="text-[21.342px] font-lato leading-[32.01px] text-secondary line-through">
-            ${product.regular_price}
-          </p>
+          {/* Heart Icon */}
+          {isWishlist ? (
+            <div className="absolute top-4 right-4 p-2 rounded-full bg-[#F5F5F5] shadow-md border border-primary opacity-100 transition-opacity duration-300 z-10">
+              <Heart className="h-5 w-5 text-red-500 fill-red-500 z-10" />
+            </div>
+          ) : (
+            <div
+              onClick={!isLoading ? handleWishlist : undefined}
+              className={`absolute top-4 right-4 p-2 rounded-full bg-white shadow-md border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 ${isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                }`}
+            >
+              <Heart className={`h-5 w-5 text-primary z-10 ${isLoading ? 'animate-pulse' : ''
+                }`} />
+            </div>
+          )}
         </div>
-      </Link>
-    </div>
+
+        <div className="relative bg-white pt-3">
+          <h3 className="text-[21.342px] font-lato leading-[32.01px] text-heading group-hover:underline group-hover:underline-offset-4">
+            {product.product_name}
+          </h3>
+
+          <div className="flex items-center gap-x-[5.34px]">
+            <p className="text-[21.342px] font-lato leading-[32.01px] text-heading">
+              ${product.discount_price}
+            </p>
+            <p className="text-[21.342px] font-lato leading-[32.01px] text-secondary line-through">
+              ${product.regular_price}
+            </p>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 
