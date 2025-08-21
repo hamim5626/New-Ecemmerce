@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     // Fetch favicon from your external API
-    const response = await fetch('https://mohammednashadmin.softvencefsd.xyz/api/get-favicon', {
+    const response = await fetch('https://mohammadnashadmin.softvencefsd.xyz/api/get-favicon', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

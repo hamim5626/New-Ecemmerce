@@ -24,18 +24,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ModalManager from "./reusable/ModalManager";
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "@/context/TranslationContext";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cartUtils } from "@/lib/utils";
 import useFetch from "@/hooks/use-fetch";
+import LanguageSwitcher from "./reusable/LanguageSwitcher";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About Us" },
-  { href: "/products", label: "Products" },
-  { href: "/videos", label: "Videos" },
-  { href: "/offers", label: "Offers" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", labelKey: "home" },
+  { href: "/about", labelKey: "aboutUs" },
+  { href: "/products", labelKey: "products" },
+  { href: "/videos", labelKey: "videos" },
+  { href: "/offers", labelKey: "offers" },
+  { href: "/blog", labelKey: "blog" },
+  { href: "/contact", labelKey: "contact" },
+  { href: "/translation-demo", labelKey: "translationDemo" },
 ];
 
 const languages = [
@@ -50,11 +53,23 @@ const PRIMARY_DARK = "#B8944A";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("EN");
   const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const { data: logoData, loading: logoLoading } = useFetch("/get-logo");
+  const { 
+    currentLanguage, 
+    changeLanguage, 
+    t, 
+    isLoading: isTranslating,
+    languageMap,
+    isInitialized
+  } = useTranslation();
+
+  // Get current language code for display
+  const currentLanguageCode = Object.keys(languageMap).find(
+    key => languageMap[key] === currentLanguage
+  ) || "EN";
 
   useEffect(() => {
     const loadCartCount = () => {
@@ -100,7 +115,7 @@ export default function Navbar() {
   }, [isMobileMenuOpen]);
 
   const handleLanguageChange = (langCode) => {
-    setSelectedLanguage(langCode);
+    changeLanguage(langCode);
   };
 
   const closeMobileMenu = () => {
@@ -160,7 +175,7 @@ export default function Navbar() {
                       className={`font-medium transition-all duration-300 relative py-2 px-1 group ${isActive ? "text-[#CFA54B]" : "text-zinc-900"
                         }`}
                     >
-                      {link.label}
+                      {isInitialized ? t(link.labelKey) : link.labelKey}
                       <span
                         className={`absolute bottom-0 left-0 h-0.5 bg-[#CFA54B] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
                           }`}
@@ -176,39 +191,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2 sm:gap-4 relative z-[150]">
             {/* Language Selector Desktop */}
             <div className="hidden md:block relative z-[200]">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center gap-2 px-3 py-2 hover:opacity-80"
-                  >
-                    <Globe className="h-4 w-4" />
-                    {selectedLanguage}
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-40 bg-white text-heading font-inter z-[200]"
-                >
-                  {languages.map((lang) => (
-                    <DropdownMenuItem
-                      key={lang.code}
-                      onClick={() => handleLanguageChange(lang.code)}
-                      className="cursor-pointer flex items-center gap-2 hover:opacity-80"
-                      style={{
-                        backgroundColor:
-                          selectedLanguage === lang.code
-                            ? `${PRIMARY_COLOR}20`
-                            : undefined,
-                      }}
-                    >
-                      <span>{lang.flag}</span>
-                      {lang.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <LanguageSwitcher variant="ghost" />
             </div>
 
             {/* Desktop Action Icons */}
@@ -392,7 +375,7 @@ export default function Navbar() {
                         }
                       }}
                     >
-                      {link.label}
+                      {t(link.labelKey)}
                       <span
                         className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 bg-white transition-all duration-300 ${isActive ? "w-24" : "w-0 group-hover:w-8"
                           }`}
@@ -415,40 +398,17 @@ export default function Navbar() {
               className="flex flex-col items-center justify-center gap-1 h-16 w-24 bg-white/15 border rounded-lg border-white/40 text-white hover:bg-white/25 transition-all active:scale-95"
             >
               <Heart className="h-4 w-4" />
-              <span className="text-xs font-medium">Wishlist</span>
+              <span className="text-xs font-medium">{isInitialized ? t("wishlist") : "Wishlist"}</span>
             </Link>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex flex-col items-center gap-1 h-16 w-24 bg-white/15 border-white/40 text-white hover:bg-white/25 backdrop-blur-sm transition-all active:scale-95"
-                >
-                  <Globe className="h-4 w-4" />
-                  <span className="text-xs font-medium">{selectedLanguage}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="center"
-                className="w-32 bg-white/95 backdrop-blur-sm z-[200]"
-              >
-                {languages.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => handleLanguageChange(lang.code)}
-                    className="cursor-pointer flex items-center gap-2 hover:opacity-80 active:scale-95 transition-all text-sm"
-                    style={{
-                      backgroundColor:
-                        selectedLanguage === lang.code ? `${PRIMARY_COLOR}25` : undefined,
-                    }}
-                  >
-                    <span>{lang.flag}</span>
-                    {lang.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="h-16 w-24">
+              <LanguageSwitcher 
+                variant="outline" 
+                size="sm"
+                className="flex flex-col items-center gap-1 h-full w-full bg-white/15 border-white/40 text-white hover:bg-white/25 backdrop-blur-sm transition-all active:scale-95"
+                showLabel={false}
+              />
+            </div>
           </div>
 
           {/* Login Button */}
@@ -467,7 +427,7 @@ export default function Navbar() {
               }}
             >
               <Link href="/login" onClick={closeMobileMenu}>
-                Login
+                {isInitialized ? t("login") : "Login"}
               </Link>
             </Button>
           </div>

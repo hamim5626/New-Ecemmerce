@@ -7,7 +7,7 @@ const DynamicFavicon = () => {
     const setFavicon = async () => {
       try {
         // Fetch favicon from your API
-        const response = await fetch('/api/get-favicon');
+        const response = await fetch('https://mohammadnashadmin.softvencefsd.xyz/api/get-favicon');
         const data = await response.json();
         
         if (data.status && data.data.favicon) {

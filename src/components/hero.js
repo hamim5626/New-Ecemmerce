@@ -126,8 +126,8 @@ export default function Hero() {
             {/* Desktop positioning */}
             <div className="hidden lg:block">
               <img
-                // src={SideIMage.src}
-                src={data?.data?.banner_image}
+                src={SideIMage.src}
+                // src={data?.data?.banner_image}
                 alt="Hero Image"
                 className="absolute right-[-52px] bottom-[-180px] max-w-[70%] xl:max-w-[75%]"
               />

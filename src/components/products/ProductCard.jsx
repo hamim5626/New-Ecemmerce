@@ -86,18 +86,24 @@ const ProductCard = ({ product, isWishlist, onWishlistChange }) => {
 
           {/* Heart Icon */}
           {isWishlist ? (
-            <div className="absolute top-4 right-4 p-2 rounded-full bg-[#F5F5F5] shadow-md border border-primary opacity-100 transition-opacity duration-300 z-10">
+            <button className="absolute top-4 right-4 p-2 rounded-full bg-[#F5F5F5] shadow-md border border-primary opacity-100 transition-opacity duration-300 z-10">
               <Heart className="h-5 w-5 text-red-500 fill-red-500 z-10" />
-            </div>
+            </button>
           ) : (
-            <div
-              onClick={!isLoading ? handleWishlist : undefined}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!isLoading) {
+                  handleWishlist();
+                }
+              }}
               className={`absolute top-4 right-4 p-2 rounded-full bg-white shadow-md border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 ${isLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
                 }`}
             >
               <Heart className={`h-5 w-5 text-primary z-10 ${isLoading ? 'animate-pulse' : ''
                 }`} />
-            </div>
+            </button>
           )}
         </div>
 

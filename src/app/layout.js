@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/context/AuthContext";
+import { TranslationProvider } from "@/context/TranslationContext";
 import { Toaster } from "sonner";
 import DynamicFavicon from "@/components/reusable/DynamicFavicon";
 
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <AuthProvider>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <TranslationProvider>
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
+          </TranslationProvider>
         </AuthProvider>
         <Toaster position="top-right" />
       </body>
